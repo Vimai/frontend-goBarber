@@ -4,7 +4,8 @@ import SingIn from './pages/SignIn';
 import SingUn from './pages/SignUp';
 import GlobalStyle from './styles/global';
 
-import { AuthProvider } from './context/AuthContext';
+import ToastContainer from './components/ToastContainer';
+import { AuthProvider } from './hooks/AuthContext';
 
 const App: React.FC = () => (
   <>
@@ -12,6 +13,7 @@ const App: React.FC = () => (
       <SingIn />
       {/* <SingUn /> */}
     </AuthProvider>
+    <ToastContainer />
     <GlobalStyle />
   </>
 );
