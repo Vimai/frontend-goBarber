@@ -1,46 +1,31 @@
 import React from 'react';
-import { FiAlertCircle, FiXCircle } from 'react-icons/fi';
-import { Container, Toast } from './styles';
+import { useTransition } from 'react-spring';
+
+import { Container } from './styles';
+
+import Toast from './Toast';
+
+import { ToastMessage, useToast } from '../../hooks/toast';
 
 interface ToastContainerProps {
-  title: string;
-  className?: string;
+  messages: ToastMessage[];
 }
 
-const ToastContainer: React.FC = () => {
+const ToastContainer: React.FC<ToastContainerProps> = ({ messages }) => {
+  const messagesWithTransactions = useTransition(
+    messages,
+    message => message.id,
+    {
+      from: { right: '-120%', opacity: 0 },
+      enter: { right: '0%', opacity: 1 },
+      leave: { right: '-120%', opacity: 0 },
+    },
+  );
   return (
     <Container>
-      <Toast hasDescription>
-        <FiAlertCircle size={20} />
-        <div>
-          <strong> Erro</strong>
-          <p>Não foi possivel</p>
-        </div>
-        <button type="button">
-          <FiXCircle size={20} />
-        </button>
-      </Toast>
-
-      <Toast type="success" hasDescription={false}>
-        <FiAlertCircle size={20} />
-        <div>
-          <strong> Erro</strong>
-        </div>
-        <button type="button">
-          <FiXCircle size={20} />
-        </button>
-      </Toast>
-
-      <Toast type="error" hasDescription>
-        <FiAlertCircle size={20} />
-        <div>
-          <strong> Erro</strong>
-          <p>Não foi possivel</p>
-        </div>
-        <button type="button">
-          <FiXCircle size={20} />
-        </button>
-      </Toast>
+      {messagesWithTransactions.map(({ item, key, props }) => (
+        <Toast key={key} style={props} message={item} />
+      ))}
     </Container>
   );
 };
