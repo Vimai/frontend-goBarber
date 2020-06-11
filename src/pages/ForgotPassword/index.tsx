@@ -32,6 +32,7 @@ const ForgotPassword: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: ForgotPasswordFormData) => {
       try {
+        setLoading(true);
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
@@ -74,6 +75,8 @@ const ForgotPassword: React.FC = () => {
           description:
             'Ocorreu um erro ao tentar realizar a recuperação de senha, tente novamente',
         });
+      } finally {
+        setLoading(false);
       }
     },
     [addToast, history],
@@ -89,7 +92,9 @@ const ForgotPassword: React.FC = () => {
               <h1>Recuperar Senha</h1>
               <Input name="email" icon={FiMail} placeholder="E-mail" />
 
-              <Button type="submit">Recuperar</Button>
+              <Button loading={loading} type="submit">
+                Recuperar
+              </Button>
             </Form>
 
             <Link to="/">
