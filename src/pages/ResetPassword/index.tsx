@@ -54,7 +54,7 @@ const ResetPassword: React.FC = () => {
         }
 
         await api.post('/password/reset', {
-          password: data.password,
+          password,
           token,
         });
 
