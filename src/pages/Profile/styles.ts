@@ -1,12 +1,29 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { shade } from 'polished';
 
-import singUpBackgroundImg from '../../assets/sign-up-background.png';
-
 export const Container = styled.div`
-  height: 100vh;
+  /* height: 100vh;
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
+  align-items: stretch; */
+
+  > header {
+    height: 144px;
+    background: #28262e;
+    display: flex;
+    align-items: center;
+
+    div {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      svg {
+        width: 30px;
+        height: 30px;
+        color: #999591;
+      }
+    }
+  }
 `;
 
 export const Content = styled.div`
@@ -14,54 +31,20 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
+  margin: -160px 0 auto;
   width: 100%;
-  max-width: 700px;
-
-  > a {
-    color: #ff9000;
-    display: block;
-    text-decoration: none;
-    transition: color 0.2s;
-    display: flex;
-    align-items: center;
-
-    svg {
-      margin-right: 12px;
-    }
-
-    &:hover {
-      color: ${shade(0.2, '#ff9000')};
-    }
-  }
-`;
-
-const appearFromRight = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-export const AnimationContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  animation: ${appearFromRight} 1s;
 
   form {
     margin: 80px 0px;
     width: 340px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
 
     h1 {
       margin-bottom: 24px;
+      font-size: 20px;
+      text-align: left;
     }
 
     a {
@@ -76,26 +59,42 @@ export const AnimationContainer = styled.div`
       }
     }
   }
-  > a {
-    color: #ff9000;
-    display: block;
-    text-decoration: none;
-    transition: color 0.2s;
+`;
+
+export const AvatarInput = styled.div`
+  margin-bottom: 32px;
+  position: relative;
+  width: 186px;
+  align-self: center;
+
+  img {
+    width: 186px;
+    height: 168px;
+    border-radius: 50%;
+  }
+
+  button {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    background: #ff9000;
+    border-radius: 50%;
+    right: 0;
+    bottom: 0;
+    transition: background-color 0.2s;
+
     display: flex;
     align-items: center;
+    justify-content: center;
 
     svg {
-      margin-right: 12px;
+      width: 20px;
+      height: 20px;
+      color: #312e38;
     }
 
     &:hover {
-      color: ${shade(0.2, '#ff9000')};
+      background: ${shade(0.2, '#ff9000')};
     }
   }
-`;
-
-export const Background = styled.div`
-  flex: 1;
-  background: url(${singUpBackgroundImg}) no-repeat center;
-  background-size: cover;
 `;

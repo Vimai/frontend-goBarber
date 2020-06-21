@@ -1,35 +1,36 @@
 import React, { useCallback, useRef } from 'react';
-import { FiArrowLeft, FiMail, FiLock, FiUser } from 'react-icons/fi';
+import { FiMail, FiLock, FiUser, FiCamera, FiArrowLeft } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import api from '../../services/api';
 
 import { useToast } from '../../hooks/toast';
 
 import getValidationErrors from '../../utils/getValidationsErrors';
 
-import logoImg from '../../assets/logo.svg';
-
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
-import { Container, Content, AnimationContainer, Background } from './styles';
+import { Container, Content, AvatarInput } from './styles';
+import { useAuth } from '../../hooks/auth';
 
-interface SingUpFormData {
+interface ProfileFormData {
   name: string;
   smail: string;
   password: string;
 }
 
-const SingUp: React.FC = () => {
+const Profile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
 
+  const { user } = useAuth();
+
   const handleSubmit = useCallback(
-    async (data: SingUpFormData) => {
+    async (data: ProfileFormData) => {
       try {
         formRef.current?.setErrors({});
 
@@ -74,31 +75,50 @@ const SingUp: React.FC = () => {
   return (
     <>
       <Container>
-        <Background />
-        <Content>
-          <AnimationContainer>
-            <img src={logoImg} alt="GoBarber" />
-            <Form ref={formRef} onSubmit={handleSubmit}>
-              <h1>Faça seu cadastro</h1>
-              <Input name="name" icon={FiUser} placeholder="Nome" />
-              <Input name="email" icon={FiMail} placeholder="E-mail" />
-              <Input
-                name="password"
-                icon={FiLock}
-                type="password"
-                placeholder="Senha"
-              />
-              <Button type="submit">Cadastrar </Button>
-            </Form>
-
-            <Link to="/">
+        <header>
+          <div>
+            <Link to="/dashboard">
               <FiArrowLeft />
-              Votar para logon
             </Link>
-          </AnimationContainer>
+          </div>
+        </header>
+
+        <Content>
+          <Form ref={formRef} onSubmit={handleSubmit}>
+            <AvatarInput>
+              <img src={user.avatar_url} alt={user.name} />
+              <button type="button">
+                <FiCamera />
+              </button>
+            </AvatarInput>
+            <h1>Meu perfil</h1>
+
+            <Input name="name" icon={FiUser} placeholder="Nome" />
+            <Input name="email" icon={FiMail} placeholder="E-mail" />
+            <Input
+              containerStyle={{ marginTop: 24 }}
+              name="old_password"
+              icon={FiLock}
+              type="password"
+              placeholder="Senha atual"
+            />
+            <Input
+              name="password"
+              icon={FiLock}
+              type="password"
+              placeholder="Nova senha"
+            />
+            <Input
+              name="password_confirmation"
+              icon={FiLock}
+              type="password"
+              placeholder="Confirmação de senha"
+            />
+            <Button type="submit">Confirmar mudanças</Button>
+          </Form>
         </Content>
       </Container>
     </>
   );
 };
-export default SingUp;
+export default Profile;
