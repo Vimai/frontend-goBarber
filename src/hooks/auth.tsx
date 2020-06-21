@@ -22,6 +22,7 @@ interface AuthContextData {
   user: User;
   signIn(credencials: SingInCredentials): Promise<void>;
   signOut(): void;
+  updateAvatar(user: User): void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -59,8 +60,22 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem('@goBarber:user');
     setData({} as AuthState);
   }, []);
+
+  const updateAvatar = useCallback(
+    (user: User) => {
+      localStorage.setItem('@goBarber:user', JSON.stringify(user));
+      setData({
+        token: data.token,
+        user,
+      });
+    },
+    [setData, data.token],
+  );
+
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user: data.user, signIn, signOut, updateAvatar }}
+    >
       {children}
     </AuthContext.Provider>
   );
