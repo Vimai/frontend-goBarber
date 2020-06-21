@@ -17,19 +17,19 @@ import Button from '../../components/Button';
 
 import { Container, Content, AnimationContainer, Background } from './styles';
 
-interface ProfileFormData {
+interface SingUpFormData {
   name: string;
   smail: string;
   password: string;
 }
 
-const Profile: React.FC = () => {
+const SingUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
 
   const handleSubmit = useCallback(
-    async (data: ProfileFormData) => {
+    async (data: SingUpFormData) => {
       try {
         formRef.current?.setErrors({});
 
@@ -101,4 +101,4 @@ const Profile: React.FC = () => {
     </>
   );
 };
-export default Profile;
+export default SingUp;
