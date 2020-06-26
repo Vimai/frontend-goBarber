@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { render, fireEvent, wait } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-hooks';
 import MockAdapter from 'axios-mock-adapter';
 import { useAuth, AuthProvider } from '../../hooks/auth';
 import api from '../../services/api';
@@ -45,5 +45,87 @@ describe('Auth Hook', () => {
       JSON.stringify(apiResponse.user),
     );
     expect(result.current.user.email).toEqual('vinicius@gmail.com');
+  });
+
+  it('should restore data from storage when auth inits', async () => {
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(key => {
+      switch (key) {
+        case '@goBarber:token':
+          return 'token-123';
+        case '@goBarber:user':
+          return JSON.stringify({
+            id: '123',
+            name: 'Vincius',
+            email: 'vinicius@gmail.com',
+            avatar: null,
+          });
+        default:
+          return null;
+      }
+    });
+
+    const { result } = renderHook(() => useAuth(), {
+      wrapper: AuthProvider,
+    });
+
+    expect(result.current.user.email).toEqual('vinicius@gmail.com');
+  });
+
+  it('should be able to signout', async () => {
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(key => {
+      switch (key) {
+        case '@goBarber:token':
+          return 'token-123';
+        case '@goBarber:user':
+          return JSON.stringify({
+            id: '123',
+            name: 'Vincius',
+            email: 'vinicius@gmail.com',
+            avatar: null,
+          });
+        default:
+          return null;
+      }
+    });
+
+    const removeItemSpy = jest.spyOn(Storage.prototype, 'removeItem');
+
+    const { result } = renderHook(() => useAuth(), {
+      wrapper: AuthProvider,
+    });
+
+    act(() => {
+      result.current.signOut();
+    });
+
+    // expect(removeItemSpy).toHaveBeenCalledTimes(2);
+    expect(result.current.user).toBeUndefined();
+  });
+
+  it('should be able to update userData', async () => {
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+
+    const { result } = renderHook(() => useAuth(), {
+      wrapper: AuthProvider,
+    });
+
+    const user = {
+      id: '123',
+      name: 'Vincius',
+      email: 'vinicius@gmail.com',
+      avatar: null,
+      avatar_url: 'img.png',
+    };
+
+    act(() => {
+      result.current.updateAvatar(user);
+    });
+
+    expect(setItemSpy).toHaveBeenCalledWith(
+      '@goBarber:user',
+      JSON.stringify(user),
+    );
+
+    expect(result.current.user).toEqual(user);
   });
 });
